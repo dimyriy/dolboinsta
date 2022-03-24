@@ -1,4 +1,6 @@
 #!/bin/sh
+docker stop instapy || true
+docker rm instapy || true
 docker run \
   --env-file env \
   --name instapy \
