@@ -2,9 +2,12 @@
 import os
 
 from instapy import InstaPy
-from instapy.browser import create_firefox_extension
+from instapy.browser import create_firefox_extension, get_geckodriver
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 
 
 def browser_executable_path():
@@ -29,20 +32,28 @@ def browser(headless=True):
     options.set_preference("dom.webdriver.enabled", False)
     options.set_preference("useAutomationExtension", False)
     options.set_preference("general.platform.override", "iPhone")
-    firefox = webdriver.Firefox(options=options)
+    firefox = webdriver.Firefox(options=options, executable_path=get_geckodriver())
+    firefox.set_script_timeout(60)
+    firefox.implicitly_wait(60)
     firefox.install_addon(create_firefox_extension(), temporary=True)
+    firefox.get('https://instagram.com/accounts/login')
+    WebDriverWait(firefox, 60).until(expected_conditions.visibility_of_element_located((By.ID, 'react-root')))
+    for element in firefox.find_elements(by=By.TAG_NAME, value='button'):
+        if element.text.strip().lower() == 'allow essential and optional cookies':
+            element.click()
+            break
     return firefox
 
 
 insta_username = os.environ.get('insta_username')
 insta_password = os.environ.get('insta_password')
-headless_browser = False
+headless_browser = True
 
 session = InstaPy(username=insta_username,
                   password=insta_password,
                   selenium_local_session=False,
                   headless_browser=headless_browser)
-session.browser = browser(headless=headless_browser)
+session.browser = browser()
 session.login()
 
 followings = session.grab_following(insta_username, 1000)
