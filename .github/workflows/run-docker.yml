@@ -10,4 +10,5 @@ jobs:
       - uses: addnab/docker-run-action@v3
         with:
           image: instapy/instapy:latest
-          options: -v ${{ github.workspace }}/dolboinsta.py:/code/docker_quickstart.py -v ${{ github.workspace }}:/code -e insta_password=$INSTA_PASSWORD -e insta_username=$INSTA_USERNAME
+          options: -v ${{ github.workspace }}/dolboinsta.py:/code/docker_quickstart.py -v ${{ github.workspace }}:/code -e insta_password=${{ secrets.INSTA_PASSWORD }} -e insta_username=${{ secrets.INSTA_USERNAME }}
+          run: python docker_quickstart.py

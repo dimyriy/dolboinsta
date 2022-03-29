@@ -6,7 +6,6 @@ from instapy.browser import create_firefox_extension, get_geckodriver
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
-from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -42,8 +41,7 @@ def browser(headless=True):
     options.set_preference("dom.webdriver.enabled", False)
     options.set_preference("useAutomationExtension", False)
     options.set_preference("general.platform.override", "iPhone")
-
-    firefox = webdriver.Firefox(options=options, service=Service(executable_path=get_geckodriver()))
+    firefox = webdriver.Firefox(options=options, executable_path=get_geckodriver())
     firefox.set_script_timeout(60)
     firefox.implicitly_wait(60)
     firefox.install_addon(create_firefox_extension(), temporary=True)
