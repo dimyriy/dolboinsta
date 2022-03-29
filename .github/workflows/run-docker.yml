@@ -14,11 +14,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: default
     steps:
-      - name: Checkout 
+      - name: Checkout
         uses: actions/checkout@v2
       - uses: addnab/docker-run-action@v3
         with:
           image: instapy/instapy:latest
-          options: -v ${{ github.workspace }}/dolboinsta.py:/code/docker_quickstart.py -v ${{ github.workspace }}:/code
-          run: insta_username=${{ secrets.INSTA_USERNAME }} insta_password=${{ secrets.INSTA_PASSWORD }} python docker_quickstart.py
+          options: >
+            -v ${{ github.workspace }}/dolboinsta.py:/code/docker_quickstart.py
+            -v ${{ github.workspace }}:/code
+            -e insta_username=${{ secrets.INSTA_USERNAME }}
+            -e insta_password=${{ secrets.INSTA_PASSWORD }}
+          run: python docker_quickstart.py
