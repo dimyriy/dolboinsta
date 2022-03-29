@@ -1,5 +1,13 @@
 name: Run Docker
-on: push
+on:
+  push:
+  workflow_call:
+    secrets:
+      INSTA_USERNAME:
+        required: true
+      INSTA_PASSWORD:
+        required: true
+
 
 jobs:
   build:
