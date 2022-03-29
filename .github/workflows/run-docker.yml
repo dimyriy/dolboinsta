@@ -12,7 +12,7 @@ on:
 
 
 jobs:
-  build:
+  query-insta:
     runs-on: ubuntu-latest
     environment: default
     steps:
