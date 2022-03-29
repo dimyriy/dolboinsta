@@ -5,8 +5,10 @@ on:
     secrets:
       INSTA_USERNAME:
         required: true
+        description: "Insta username"
       INSTA_PASSWORD:
         required: true
+        description: "Insta password"
 
 
 jobs:
@@ -16,7 +18,10 @@ jobs:
       - name: Checkout 
         uses: actions/checkout@v2
       - uses: addnab/docker-run-action@v3
+        env:
+          INSTA_USERNAME: ${{ secrets.INSTA_USERNAME }}
+          INSTA_PASSWORD: ${{ secrets.INSTA_PASSWORD }}
         with:
           image: instapy/instapy:latest
-          options: -v ${{ github.workspace }}/dolboinsta.py:/code/docker_quickstart.py -v ${{ github.workspace }}:/code -e insta_password=${{ secrets.INSTA_PASSWORD }} -e insta_username=${{ secrets.INSTA_USERNAME }}
+          options: -v ${{ github.workspace }}/dolboinsta.py:/code/docker_quickstart.py -v ${{ github.workspace }}:/code -e insta_password=${{ env.INSTA_PASSWORD }} -e insta_username=${{ env.INSTA_USERNAME }}
           run: python docker_quickstart.py
